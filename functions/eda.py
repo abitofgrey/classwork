@@ -16,6 +16,8 @@ def eda(df: pd.DataFrame) -> pd.DataFrame:
     index = df.columns
     new_columns = [
         "is_numeric",
+        "mean",
+        "median",
         "min",
         "max",
         "range",
@@ -32,21 +34,25 @@ def eda(df: pd.DataFrame) -> pd.DataFrame:
         num_unique = df[col].nunique()
         if pd.api.types.is_numeric_dtype(df[col]):
             is_num = True
+            mean = df[col].mean()
+            median = df[col].median()
             min = df[col].min()
             max = df[col].max()
             rng = max - min
             std = round(df[col].std(), 4)
             unique_vals = np.nan
-            row = [is_num, min, max, rng, std, num_na, perc_na, num_unique, unique_vals]
+            row = [is_num, mean, median, min, max, rng, std, num_na, perc_na, num_unique, unique_vals]
             data.append(row)
         else:
             is_num = False
+            mean = np.nan
+            median = np.nan
             min = np.nan
             max = np.nan
             rng = np.nan
             std = np.nan
             unique_vals = df[col].unique() if num_unique < 8 else np.nan
-            row = [is_num, min, max, rng, std, num_na, perc_na, num_unique, unique_vals]
+            row = [is_num, mean, median, min, max, rng, std, num_na, perc_na, num_unique, unique_vals]
             data.append(row)
     new_df = pd.DataFrame(data = data, columns = new_columns, index = index)
     return new_df
